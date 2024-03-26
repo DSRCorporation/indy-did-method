@@ -19,3 +19,5 @@ Some examples of `did:indy` DID Method identifiers are:
     * `did:indy:sovrin:staging:6cgbu8ZPoWTnR5Rv5JcSMB`
 * A DID on the IDUnion Test ledger:
     * `did:indy:idunion:test:2MZYuPv2Km7Q1eD4GCsSb6`
+* A DID written to the Besu ledger:
+  * `did:indy:besu:testnet:0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266`

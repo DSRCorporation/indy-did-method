@@ -42,6 +42,7 @@ DID URL: [`did:indy:sovrin:F72i3Y3Q4i466efjYJYCHM/anoncreds/v0/SCHEMA/npdb/4.3.4
 
 - Object Family: `anoncreds`
 - Family Version: `v0`
+- Object Type: `SCHEMA`
 - Name, example `npdb`: The client-defined schema name
 - Schema Version, example `4.3.4`: The client-defined version of the [[ref: SCHEMA]]
 
@@ -58,9 +59,11 @@ DID URL: [`did:indy:sovrin:5nDyJVP1NrcPAttP3xwMB9/anoncreds/v0/CLAIM_DEF/56495/n
 
 - Object Family: `anoncreds`
 - Family Version: `v0`
-- Schema ID, example `56495`: A unique identifier for the schema upon which the CredDef is defined. In v0, the value is also the Hyperledger Indy instance sequence number for the Schema object used by this Cred Def.
-  In later versions, we expect that the schema identifier will either be removed from the CredDef DID URL, or take a different form.
-- Name, example `npdb`: The client-defined cred def name.
+- Schema ID
+  - Example `56495`: A unique identifier for the schema upon which the CredDef is defined. In v0, the value is also the Hyperledger Indy instance sequence number for the Schema object used by this Cred Def.
+  - Example `did:indy:besu:testnet:0xf0e2db6c8dc6c681bb5d6ad121a107f300e9b2b5/anoncreds/v0/SCHEMA/F1DClaFEzi3t/1.0.0`: A Schema DID URL lake a unique identifier
+  - In later versions, we expect that the schema identifier will either be removed from the CredDef DID URL, or take a different form.
+- Name, example `npdb`: The client-defined cred def name/tag.
 
 Response: Same as the Indy Node [GET_CLAIM_DEF Txn](https://hyperledger-indy.readthedocs.io/projects/node/en/latest/requests.html#get-claim-def)
 

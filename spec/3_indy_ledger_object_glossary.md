@@ -2,8 +2,15 @@
 
 Instances of Hyperledger Indy networks persist different kind of (internal) data objects in the ledger. The following section describes those objects.
 
+[[def: DID Document]]
+
+~ A DID document is an entity containing a distributed identifier and properties of the owner of this `did`.
+
+~ A DID Document conform to the [Decentralized Identifiers (DIDs) Core specification](https://https://www.w3.org/TR/did-core/).
 
 [[def: NYM]]
+
+~ A NYM is a legacy Indy entity
 
 ~ A NYM (short for "Verinym") is associated with the Legal Identity of an Identity Owner and is a Hyperledger Indy specific term for a data object, which holds DID data of one concrete identity returned during DID resolution. While a NYM can be [read](https://hyperledger-indy.readthedocs.io/projects/node/en/latest/requests.html#get-nym) from a Hyperledger Indy Node by any client, a NYM can only be [written](https://hyperledger-indy.readthedocs.io/projects/node/en/latest/requests.html#nym) to a Hyperledger Indy network as long as the writing entity possess the proper permissions.
 
@@ -15,7 +22,7 @@ Instances of Hyperledger Indy networks persist different kind of (internal) data
 
 ~ A Hyperledger Indy ATTRIB (short for "attribute") object extends a specific DID (also known as [[ref: NYM]]) of its owner with further information (attributes) and can be [read](https://hyperledger-indy.readthedocs.io/projects/node/en/latest/requests.html#get-attrib) from a Hyperledger Indy Node by any client. An ATTRIB object can only be [written](https://hyperledger-indy.readthedocs.io/projects/node/en/latest/requests.html#attrib) to a Hyperledger Indy network by an owner of the DID on that network.
 
-~ The use of ATTRIB is **deprecated** with the introduction of the `did:indy` DID Method. The only common use of ATTRIBs in Hyperledger Indy prior to `did:indy` was to define DIDDoc service endpoints for a DID. Since with `did:indy` such a service endpoint can be added directly to the DID (along with any other DIDDoc data) there is no need to continue the use of the older ATTRIB `endpoint` convention. While a Hyperledger Indy client (such as [[ref: Indy VDR]]) MAY continue to try to resolve an `endpoint` ATTRIB when there is no DIDDoc content in a resolved DID, the ongoing practice of using an ATTRIB for that or any other purpose is discouraged.
+~ An ATTRIB is a legacy entity. The use of ATTRIB is **deprecated** with the introduction of the `did:indy` DID Method. The only common use of ATTRIBs in Hyperledger Indy prior to `did:indy` was to define DIDDoc service endpoints for a DID. Since with `did:indy` such a service endpoint can be added directly to the DID (along with any other DIDDoc data) there is no need to continue the use of the older ATTRIB `endpoint` convention. While a Hyperledger Indy client (such as [[ref: Indy VDR]]) MAY continue to try to resolve an `endpoint` ATTRIB when there is no DIDDoc content in a resolved DID, the ongoing practice of using an ATTRIB for that or any other purpose is discouraged.
 
 ~ The `did:indy` method introduces legacy support for retrieving the service endpoint of a past version of an attribute by `versionId` or `versionTime`, using a process similar to resolving [DID Versions](\https://hyperledger.github.io/indy-did-method/#did-versions) by these parameters.
 
@@ -56,3 +63,7 @@ credential validation and can be [read](https://hyperledger-indy.readthedocs.io/
 
 ~ Hyperledger Indy VDR (for "Verifiable Data Registry") is an open source implementation of an Indy client/resolver for both DIDs and other Indy objects.
 The repository is called indy-vdr and can be found [here](https://github.com/hyperledger/indy-vdr).
+
+[[def: Indy Besu VDR]]
+
+~ Hyperledger Indy Besu VDR (for "Verifiable Data Registry") is an open source implementation of an Indy Besu client/resolver for both DIDs and other Indy objects. The repository is called indy-besu contains Indy Besu VDR [here](https://github.com/hyperledger/indy-besu/tree/main/vdr).
