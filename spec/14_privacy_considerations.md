@@ -19,7 +19,7 @@ DID Documents can be resolved from a DID, however the DID subject can choose to 
 
 ### Misattribution
 
-DIDs of NYM transaction `version` 2 are self-certifying and immutable, the control flow of the ledger nodes prevents any misattribution given that it is implemented correctly. It is the responsibility the creator of the DIDs to elect to use the self-certification feature.
+DIDs of NYM and DID Document transaction `version` 2 are self-certifying and immutable, the control flow of the ledger nodes prevents any misattribution given that it is implemented correctly. It is the responsibility the creator of the DIDs to elect to use the self-certification feature.
 
 ### Correlation
 
