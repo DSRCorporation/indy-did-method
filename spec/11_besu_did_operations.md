@@ -31,14 +31,14 @@
                           "https://www.w3.org/ns/did/v1",
                            "https://w3id.org/security/suites/ed25519-2020/v1"
                       ],
-                      "id": "did:indybesu:0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                      "id": "did:indy:besu:0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
                       "verificationMethod": [{
-                          "id": "did:indybesu:0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266#key-1",
+                          "id": "did:indy:besu:0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266#key-1",
                           "type": "Ed25519VerificationKey2020",
-                          "controller": "did:indybesu:0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                          "controller": "did:indy:besu:0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
                           "publicKeyMultibase": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
                       }],
-                      "authentication": ["did:indybesu:0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266#key-1"],
+                      "authentication": ["did:indy:besu:0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266#key-1"],
                   }
               "), 
               metadata: {
