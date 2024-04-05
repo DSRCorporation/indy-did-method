@@ -107,3 +107,144 @@ The idea is using of a basic mapping between other DIDs identifiers and ethereum
   * for Schema/Credential Definition firstly must resolve new identifier
     using `LegacyMappingRegistry.resourceMapping(legacyIdentifier)`, and next resolve Schema/Credential Definition as it described in the
     corresponding specification.
+
+## Migration from Indy Ledger
+
+This document contains a plan of attack for migration of customers using `indy-node` with `indy-plenum` ledgers to Indy 2.
+
+### Ledger migration
+
+All Issuers need to run migration by itself to move their data (DID Document, Schema, Credential Definition) to Indy Besu ledger.
+
+### Step by step Indy based applications migration flow
+
+This section provides example steps demonstrating the process of migration for applications using Indy ledger to Indy Besu Ledger.
+The parties involved into the flow:
+* Trustee - publish Issuer DID on the Ledger
+  * Write data to Ledger
+* Issuer - publish DID, Schema, and Credential Definition on the Ledger + Issue Credential for a Holder
+  * Write data to Ledger
+* Holder - accept Credential and share Proof
+  * Read data from the Ledger
+* Verifier - request Proof from a Holder
+  * Read data from the Ledger
+
+### Before migration
+
+At this point, all parties acts as usual and use Indy Ledger as a verifiable data registry.
+
+> Consider that these steps happened some time at the past before the decision to migrate from Indy Node to Indy Besu Ledger.
+
+1. Issuer setup (DID Document, Schema, Credential Definition):
+  1. All parties create an indy wallet and uses some Indy Ledger client
+  2. Trustee publish Issuer's DID to Indy Ledger using NYM transaction
+  3. Issuer publish Service Endpoint to Indy Ledger using ATTRIB
+  4. Issuer create and publish Credential Schema to Indy Ledger using SCHEMA
+  5. Issuer create and publish Credential Definition to Indy Ledger using CLAIM_DEF
+2. Credential issuance
+  1. Issuer create Credential Offer
+  2. Holder accept Credential Offer:
+    1. Resolve Schema from Indy Ledger using GET_SCHEMA request
+    2. Resolve Credential Definition from Indy Ledger using GET_CLAIM_DEF request
+    3. Create Credential Offer
+  3. Issuer sign Credential
+  4. Holder store Credential
+3. Credential verification
+  1. Verifier create Proof Request
+  2. Holder accept Proof Request and create Proof
+  3. Verifier verify Proof
+    1. Resolve Schemas from Indy Ledger using GET_SCHEMA request
+    2. Resolve Credential Definitions from Indy Ledger using GET_CLAIM_DEF request
+    3. Verify Proof
+
+### Migration
+
+At some point company managing (Issuer,Holder,Verifier) decide to migrate from Indy to Indy Besu Ledger.
+
+In order to do that, their Issuer's applications need to publish their data to Indy Besu Ledger.
+Issuer need to run migration tool manually (on the machine containing Indy Wallet storing Credential Definitions) which migrate data.
+
+* Issuer:
+  * All issuer applications need run migration tool manually (on the machine containing Indy Wallet with Keys and Credential Definitions) in order to move data to Indy Besu Ledger properly. The migration process consist of multiple steps which will be described later.
+  * After the data migration, issuer services should issue new credentials using Indy Besu Ledger.
+* Holder:
+  * Holder applications can keep stored credentials as is. There is no need to run migration for credentials which already stored in the wallet.
+  * Holder applications should start using Indy Besu Ledger to resolve Schemas and Credential Definition once Issuer completed migration.
+* Verifier:
+  * Verifier applications should start using Indy Besu Ledger to resolve Schemas and Credential Definition once Issuer completed migration.
+  * Verifier applications should keep using old styled restriction in order to request credentials which were received before the migration.
+
+1. Wallet and Client setup. All applications need to integrate Besu vdr library
+2. DID ownership moving to Indy Besu Ledger:
+  1. Issuer create Ed25519 key (with seed) in the Besu wallet
+  2. Issuer create a new Secp256k1 keypair in Besu wallet
+  3. Issuer publish Secp256k1 key to Indy ledger using ATTRIB transaction: `{ "besu": { "key": secp256k1_key } }`
+    * Now Besu Secp256k1 key is associated with the Issuer DID which is published on the Indy Ledger.
+    * ATTRIB transaction is signed with Ed25519 key. No signature request for `secp256k1_key`.
+3. Issuer build DID Document which will include:
+  * DID - fully qualified form should be used: `did:besu:network:<did_value>` of DID which was published as NYM transaction to Indy Ledger
+  * Two Verification Methods must be included:
+    * `Ed25519VerificationKey2018` key published as NYM transaction to Indy Ledger
+      * Key must be represented in multibase as base58 form was deprecated
+    * `EcdsaSecp256k1VerificationKey2019` key published as ATTRIB transaction to Indy Ledger
+      * Key must be represented in multibase
+      * This key will be used in future to sign transactions sending to Indy Besu Ledger
+        * Transaction signature proves ownership of the key
+        * Besu account will be derived from the public key part
+  * Two corresponding authentication methods must be included.
+  * Service including endpoint which was published as ATTRIB transaction to Indy Ledger
+4. Issuer publish DID Document to Indy Besu Ledger:
+    ```
+     let did_doc = build_did_doc(&issuer.did, &issuer.edkey, &issuer.secpkey, &issuer.service);
+     let receipt = DidRegistry::create_did(&client, &did_document).await
+    ```
+  * Transaction is signed using Secp256k1 key `EcdsaSecp256k1VerificationKey2019`.
+    * This key is also included into Did Document associated with DID.
+    * Transaction level signature validated by the ledger that proves key ownership.
+  * `Ed25519VerificationKey2018` - Indy Besu Ledger will not require signature for proving ownership this key.
+    * key just stored as part of DID Document and is not validated
+    * potentially, we can add verification through the passing an additional signature
+5. Issuer converts Indy styled Schema into new style (anoncreds specification) and publish it to Indy Besu Ledger.
+6. Issuer converts Indy styled Credential Definition into new style (anoncreds spec) and publish it to Indy Besu Ledger
+  * Migration tool will provide a helper method to convert Credential Definition.
+  * Credential Definition ID must include schema seq for achieving backward-compatibility
+  * Same time `schemaId` field must contain actual id of schema published to Indy Besu Ledger
+
+### After Migration
+
+All parties switch to use Indy Besu Ledger as verifiable data registry.
+
+Now credential issuance and credential verification flow can run as before but with usage of another vdr library.
+
+1. Credential verification
+  1. Verifier create Proof Request
+  2. Holder accept Proof Request and create Proof
+    1. Holder resolve Schema from Indy Besu Ledger (VDR converts indy schema id representation into Besu form)
+       ```
+       let schema_id = SchemaId::from_indy_format(&indy_schema_id);
+       let schema = SchemaRegistry::resolve_schema(&client, &schema_id).await
+       ``` 
+      * Migration tool will provide helper to convert old style indy schema id into new format
+    2. Holder resolve Credential Definition from Indy Besu Ledger (VDR converts indy cred definition id representation into Besu form)
+       ```
+       let cred_def_id = CredentialDefinitionId::from_indy_format(cred_def_id);
+       let cred_def = CredentialDefinitionRegistry::resolve_credential_definition(&client, id).await
+       ``` 
+      * Migration tool will provide helper to convert old style indy credential definition id into new format
+    3. Create Proof
+  3. Verifier verify Proof
+    1. Holder resolve Schema from Indy Besu Ledger (VDR converts indy schema id representation into Besu form)
+       ```
+       let schema_id = SchemaId::from_indy_format(&indy_schema_id);
+       let schema = SchemaRegistry::resolve_schema(&client, &schema_id).await
+       ``` 
+      * Schema id must be converted as well because proof will contain old style ids
+    2. Holder resolve Credential Definition from Indy Besu Ledger (VDR converts indy cred definition id representation into Besu form)
+       ```
+       let cred_def_id = CredentialDefinitionId::from_indy_format(cred_def_id);
+       let cred_def = CredentialDefinitionRegistry::resolve_credential_definition(&client, id).await
+       ``` 
+    3. Verify proof
+2. Credential Issuance goes as before but another ledger is used as a verifiable data registry.
+
+[Detailed technical description is here.](https://github.com/hyperledger/indy-besu/blob/main/docs/migration/migration.md)

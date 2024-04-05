@@ -32,6 +32,8 @@ The namespace identifier MUST be derived from the initial `verkey` for the DID, 
 
 ### `did:indy:besu` DID Namespace Identifier Syntax
 
-The namespace identifer is an identifier within the namespace of a Hyperledger Indy network that is unique for that namespace.
+The namespace identifier is an identifier within the namespace of a Hyperledger Indy network that is unique for that namespace.
 
     ethereum-address-identifier = "0x" 40*HEXDIG
+
+In this case, the identifier is the Ethereum address. Since when creating a DID document using a signature of a public key of this Ethereum account, the DID Document is self-trusted.
