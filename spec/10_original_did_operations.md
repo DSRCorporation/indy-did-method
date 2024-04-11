@@ -1,4 +1,6 @@
-## DID Operations
+## did:indy Operations
+
+There is a description of types and operations that are available in case of using [`indy-node`](https://github.com/hyperledger/indy-node) with [`indy-plenum`](https://github.com/hyperledger/indy-plenum) repositories.
 
 ### Creation
 

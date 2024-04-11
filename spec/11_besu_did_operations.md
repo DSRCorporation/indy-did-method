@@ -1,28 +1,28 @@
-## Besu DID Operations
+## did:indy:besu Operations
+
+There is a description of a storage format, types and operations that are available in case of using [`indy-besu`](https://github.com/hyperledger/indy-besu) repository.
 
 ### Storage format
 
-* DID Records collection:
-    * Description: Mapping holding the list of DID's to their DID Document and metadata.
-    * Format:
-        ```
-        mapping(address identity => DidRecord didRecord);
-  
-        struct DidDocStorage {
+DID Records collection contains `DidRecord` structures consisting of DID Document and `DidMetadata`
+
+```
+struct DidRecord {
              bytes document;
              DidMetadata metadata;
-        }
-  
-        struct DidMetadata {
+}
+struct DidMetadata {
             address owner;
             uint256 created;
             uint256 updated;
             uint256 versionId;
             bool deactivated;
-        }
-        ```
-    * Example:
-      ```
+}
+```
+
+Example:
+
+```
       {
           "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266": {
               document: bytes("
@@ -51,7 +51,7 @@
           },
           ...
       }
-      ```
+```
 
 ### Types definition
 
@@ -73,7 +73,7 @@ Each DID Document MUST have a metadata section when a representation is produced
 
 ### DIDDoc Validation
 
-There is now specific validation of DID Document on the ledger side. It is implemented in Indy Besy VDR code.
+There is no specific validation of DID Document on the ledger side. It is implemented in Indy Besu VDR code instead.
 
 ### Transactions (Smart Contract's methods)
 
@@ -162,6 +162,13 @@ Contract name: **IndyDidRegistry**
         ```
     * Raised Event:
         * `DIDDeactivated(identity)`
+
+#### Endorsement flow
+
+Not all identity owners may have permissions for writing transactions on the ledger.
+
+For endorsement flow `IndyDidRegistry` contains methods: `createDidSigned`, `updateDidSigned` and `deactivateDidSigned`. They duplicate `createDid`, `updateDid` and `deactivateDid` with additional `signature` parameter.
+`Signature` is EcDSA signature by the DID author's Ethereum identity account keys.
 
 #### Resolve DID Document with Meta
 

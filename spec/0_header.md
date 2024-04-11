@@ -17,6 +17,8 @@ Indy DID Method
 - [Dominic Wörner](https://github.com/domwoe)
 - [Daniel Bluhm](https://github.com/dbluhm)
 - [Kyle Den Hartog](https://github.com/kdenhartog)
+- [Artem Ivanov](https://github.com/artemkaaas)
+- [Renata Toktar](https://github.com/toktar)
 
 <!-- -->
 
