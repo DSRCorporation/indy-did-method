@@ -48,6 +48,8 @@ Amplification attacks to exhaust the network bandwidth are protected to measures
 
 ## Security Considerations for Indy Besu
 
+Hyperledger Indy Besu implementation is based on Hyperledger Besu and Ethereum and inherit their security policy.
+
 ### Consensus Algorithms
 
 The Hyperledger Besu implementation utilizes Proof of Authority consensus mechanism from Indy Besu.
