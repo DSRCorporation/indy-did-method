@@ -24,9 +24,9 @@ The idea is using of a basic mapping between other DIDs identifiers and Ethereum
     * DID identifier itself
     * Associated public key
     * Ed25519 signature owner identifier proving ownership
-* After migration, clients in order to resolve legacy identifier for DID document:
-  * firstly should get a new identifier of the required Document DID, using DID mapping
-  * next resolve DID document with the new DID
+* After migration, clients in order to resolve legacy identifier for DID document or a specific entity:
+  * firstly should get a new identifier of the required Document DID or another entity, using DID or resource mapping
+  * next resolve with the new identifier
 
 ### Migration from `did:indy` to `did:indy:besu`
 
